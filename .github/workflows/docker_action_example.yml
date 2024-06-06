@@ -1,7 +1,11 @@
 name: Docker Action Example
 
 on:
-  workflow_dispatch:
+  schedule:
+    - cron: '0 0 3 * * *'  # 每天3:00
+    - cron: '0 0 9 * * *'  # 每天9:00
+    - cron: '0 0 15 * * *' # 每天15:00
+    - cron: '0 0 21 * * *' # 每天21:00
 
 jobs:
   build:
@@ -16,16 +20,11 @@ jobs:
     
       
     - name: Run Docker container
-      run: docker ps
-
-  restart_workflow:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Trigger workflow
-      uses: peter-evans/repository-dispatch@v1
-      with:
-        token: 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
-        repository: czq202115/my_action_ai
-        event-type: trigger-workflow
-        client-payload: '{"workflow_file": ".github/workflows/docker_action_example.yml"}'
+      run: |
+        sudo apt install git git-lfs wget -y
+        wget https://github.com/kschen202115/build_llama.cpp_docker/releases/download/0.0.1/image.tar
+        docker load image.tar
+        git lfs install
+        git clone https://huggingface.co/runfuture/MiniCPM-2B-dpo-fp16-gguf .
+        
+        
