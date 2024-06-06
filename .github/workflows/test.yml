@@ -19,7 +19,7 @@ jobs:
       run: |
         sudo apt install git git-lfs wget -y
         wget https://github.com/kschen202115/build_llama.cpp_docker/releases/download/0.0.1/image.tar
-        docker load image.tar
+        docker load -i image.tar
         git lfs install
         git clone https://huggingface.co/runfuture/MiniCPM-2B-dpo-fp16-gguf .
         sudo chmod +x run_docker.sh
