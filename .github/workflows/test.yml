@@ -24,5 +24,6 @@ jobs:
         mkdir models
         cd $GITHUB_WORKSPACE/models
         git clone https://huggingface.co/runfuture/MiniCPM-2B-dpo-fp16-gguf .
+        cd $GITHUB_WORKSPACE
         sudo chmod +x run_docker.sh
         sudo bash run_docker.sh
