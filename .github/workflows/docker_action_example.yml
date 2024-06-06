@@ -25,7 +25,7 @@ jobs:
     - name: Trigger workflow
       uses: peter-evans/repository-dispatch@v1
       with:
-        token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         repository: yourusername/yourrepositoryname
         event-type: trigger-workflow
         client-payload: '{"workflow_file": ".github/workflows/docker_action_example.yml"}'
