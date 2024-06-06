@@ -26,7 +26,7 @@ jobs:
             owner: context.repo.owner,
             repo: context.repo.repo
           });
-          const workflowB = workflows.find(workflow => workflow.name === 'Workflow B');
+          const workflowB = workflows.find(workflow => workflow.name === 'Docker Action Example');
           await github.actions.createWorkflowDispatch({
             owner: context.repo.owner,
             repo: context.repo.repo,
