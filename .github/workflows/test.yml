@@ -14,7 +14,12 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
     
-      
+    - name: install cloudflare
+      run: |
+        sudo apt install curl -y
+        curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && 
+        sudo dpkg -i cloudflared.deb && 
+        sudo cloudflared service install eyJhIjoiYWZjODQ0MzQ0YzNhZGE5ODM3MzgzYjFlNDQzYjg3YWEiLCJ0IjoiMTQyZDMzMWMtYWUzZC00ZGJkLThhYzktZDJlNzY2YTAxYmFiIiwicyI6Ill6YzRNRGhpWVRBdE0yRmpOQzAwWW1RNUxUbGhOVFF0WXpSbE16WmlOMlF5TXpOaiJ9
     - name: Run Docker container
       run: |
         sudo apt install git git-lfs wget -y
