@@ -16,15 +16,20 @@ jobs:
 
     - name: pull Docker container
       run: docker ps
-
-  restart_workflow:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Trigger workflow
-      uses: peter-evans/repository-dispatch@v1
+      
+    - name: Trigger Workflow B
+      uses: actions/github-script@v5
       with:
-        token: ${{ secrets.REPO_ACCESS_TOKEN }}
-        repository: yourusername/yourrepositoryname
-        event-type: trigger-workflow
-        client-payload: '{"workflow_file": ".github/workflows/docker_action_example.yml"}'
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const { data: workflows } = await github.actions.listRepoWorkflows({
+            owner: context.repo.owner,
+            repo: context.repo.repo
+          });
+          const workflowB = workflows.find(workflow => workflow.name === 'Workflow B');
+          await github.actions.createWorkflowDispatch({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            workflow_id: workflowB.id
+          });
+
