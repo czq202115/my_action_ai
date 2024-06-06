@@ -1,0 +1,30 @@
+name: Docker Action Example
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: pull Docker container
+      run: docker ps
+
+  restart_workflow:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger workflow
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        repository: yourusername/yourrepositoryname
+        event-type: trigger-workflow
+        client-payload: '{"workflow_file": ".github/workflows/docker_action_example.yml"}'
