@@ -2,10 +2,8 @@ name: Docker Action Example
 
 on:
   schedule:
-    - cron: '0 0 3 * * *'  # 每天3:00
-    - cron: '0 0 9 * * *'  # 每天9:00
-    - cron: '0 0 15 * * *' # 每天15:00
-    - cron: '0 0 21 * * *' # 每天21:00
+    - cron: '0 */6 * * *'  
+
 
 jobs:
   build:
@@ -17,17 +15,41 @@ jobs:
     
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
-    
-      
-    - name: Run Docker container
+    - name: 下载模型
       run: |
         sudo apt install git git-lfs wget -y
-        wget https://github.com/kschen202115/build_llama.cpp_docker/releases/download/0.0.1/image.tar
-        docker load image.tar
+       
+        cd $GITHUB_WORKSPACE
+        mkdir models
+        cd $GITHUB_WORKSPACE/models
         git lfs install
-        git clone https://huggingface.co/runfuture/MiniCPM-2B-dpo-fp16-gguf .
+        git clone https://huggingface.co/runfuture/MiniCPM-2B-dpo-fp16-gguf --depth=1
+        ls
+        echo "下载完成"
+    
+    - name: Run Docker container
+      run: |
+        
+        wget https://github.com/kschen202115/build_llama.cpp_docker/releases/download/0.0.1/image.tar
+        docker load -i image.tar
+        cd $GITHUB_WORKSPACE
+        docker network create --subnet=172.18.0.0/16 my_custom_network
+        # 启动 Docker 容器
+        sudo docker run -itd --name cf --net my_custom_network --ip 172.18.0.10 cloudflare/cloudflared:latest tunnel --no-autoupdate run --token eyJhIjoiYWZjODQ0MzQ0YzNhZGE5ODM3MzgzYjFlNDQzYjg3YWEiLCJ0IjoiMTQyZDMzMWMtYWUzZC00ZGJkLThhYzktZDJlNzY2YTAxYmFiIiwicyI6Ill6YzRNRGhpWVRBdE0yRmpOQzAwWW1RNUxUbGhOVFF0WXpSbE16WmlOMlF5TXpOaiJ9
+        sudo docker run -itd --name chat --net my_custom_network --ip 172.18.0.11 -v $GITHUB_WORKSPACE/models:/models  my-image:latest -m /models/MiniCPM-2B-dpo-fp16-gguf/MiniCPM-2B-dpo-fp16-gguf.gguf --port 8000 --host 0.0.0.0 -n 1024
+        sudo docker ps -a
+        ip add
+        sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cf
+        sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' chat
+        cd models
+        ls
+        cd MiniCPM-2B-dpo-fp16-gguf
+        ls
+        sleep 10
+        docker logs --details chat
+    - name: 保活
+      run: |
+        cd $GITHUB_WORKSPACE
         sudo chmod +x run_docker.sh
         sudo bash run_docker.sh
-        
-        
-        
+        sudo docker ps -a
