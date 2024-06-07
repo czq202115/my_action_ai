@@ -22,6 +22,8 @@ sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}
 sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' chat
 cd $GITHUB_WORKSPACE/models/
 ls
+cd MiniCPM-2B-dpo-fp16-gguf
+ls
 
 
 # 获取当前时间戳
