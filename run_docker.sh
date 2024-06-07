@@ -24,6 +24,8 @@ cd models
 ls
 cd MiniCPM-2B-dpo-fp16-gguf
 ls
+sleep 10
+docker logs --details chat
 
 
 # 获取当前时间戳
