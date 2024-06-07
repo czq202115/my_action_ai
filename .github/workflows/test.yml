@@ -48,6 +48,9 @@ jobs:
         ls
         sleep 10
         docker logs --details chat
+    - name: 保活
+      run: |
+        cd $GITHUB_WORKSPACE
         sudo chmod +x run_docker.sh
         sudo bash run_docker.sh
         sudo docker ps -a
