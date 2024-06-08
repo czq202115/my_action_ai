@@ -29,18 +29,27 @@ jobs:
     
     - name: Run Docker container
       run: |
-        
-        wget https://github.com/kschen202115/build_llama.cpp_docker/releases/download/0.0.1/image.tar
+        cd $GITHUB_WORKSPACE
+        mkdir img
+        cd img
+        wget https://github.com/czq202115/my_action_ai/releases/download/black_up/image.tar
         docker load -i image.tar
+        wget https://github.com/czq202115/my_action_ai/releases/download/black_up/xui_img.tar.gz
+        tar -zxvf xui_img.tar.gz
+        docker load -i xui.tar
+        
         cd $GITHUB_WORKSPACE
         docker network create --subnet=172.18.0.0/16 my_custom_network
+
         # 启动 Docker 容器
+        sudo docker run -itd --name xui --net my_custom_network --ip 172.18.0.12 xui:latest /usr/local/x-ui/x-ui
         sudo docker run -itd --name cf --net my_custom_network --ip 172.18.0.10 cloudflare/cloudflared:latest tunnel --no-autoupdate run --token eyJhIjoiYWZjODQ0MzQ0YzNhZGE5ODM3MzgzYjFlNDQzYjg3YWEiLCJ0IjoiMTQyZDMzMWMtYWUzZC00ZGJkLThhYzktZDJlNzY2YTAxYmFiIiwicyI6Ill6YzRNRGhpWVRBdE0yRmpOQzAwWW1RNUxUbGhOVFF0WXpSbE16WmlOMlF5TXpOaiJ9
         sudo docker run -itd --name chat --net my_custom_network --ip 172.18.0.11 -v $GITHUB_WORKSPACE/models:/models  my-image:latest -m /models/MiniCPM-2B-dpo-fp16-gguf/MiniCPM-2B-dpo-fp16-gguf.gguf --port 8000 --host 0.0.0.0 -n 1024
         sudo docker ps -a
         ip add
         sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cf
         sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' chat
+        sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' xui
         cd models
         ls
         cd MiniCPM-2B-dpo-fp16-gguf
