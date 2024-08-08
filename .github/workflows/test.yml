@@ -32,7 +32,7 @@ jobs:
         cd img
         wget https://github.com/czq202115/my_action_ai/releases/download/black_up/image.tar
         docker load -i image.tar
-        wget https://github.com/czq202115/my_action_ai/releases/download/black_up/xui_img.tar.gz
+        wget https://github.com/czq202115/my_action_ai/releases/download/latest/xui_img.tar.gz
         tar -zxvf xui_img.tar.gz
         docker load -i xui.tar
         
