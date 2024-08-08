@@ -66,5 +66,6 @@ jobs:
         echo ${{ secrets.GITHUB_TOKEN }} > token.txt
         gh auth login --with-token < token.txt
         rm token.txt
+        gh release delete latest
         gh release create latest xui_img.tar.gz
 
