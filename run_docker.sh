@@ -9,7 +9,7 @@ start_time=$(date +%s)
 
 # 计算 4 小时 55 分钟后的时间戳
 # end_time=$((start_time + 5*60*60 + 55*60))
-end_time=$((start_time + 30*60))
+end_time=$((start_time + 5*60))
 
 # 循环检查时间，直到当前时间超过结束时间
 while [ $(date +%s) -lt $end_time ]; do
