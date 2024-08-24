@@ -15,10 +15,11 @@ jobs:
     
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
-    - name: Set up WARP
-      uses: fscarmen/warp-on-actions@v1.1
-      with:
-        stack: ipv6   # Optional. Support [ ipv4, ipv6, dual ]. Default is dual.
+      
+    # - name: Set up WARP
+    #   uses: fscarmen/warp-on-actions@v1.1
+    #   with:
+    #     stack: ipv6   # Optional. Support [ ipv4, ipv6, dual ]. Default is dual.
     - name: 下载模型
       run: |
         sudo apt install git git-lfs wget -y
